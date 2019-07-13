@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
                 height: 300.0,
                 width: double.infinity,
                 fit: BoxFit.cover,
-              )
+              ),
             ListTile(
               title: Text('${ producto.titulo } - ${ producto.valor }'),
               subtitle: Text(producto.id),

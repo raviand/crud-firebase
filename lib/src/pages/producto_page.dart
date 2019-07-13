@@ -141,8 +141,9 @@ class _ProductoPageState extends State<ProductoPage> {
       content: Text(mensaje),
       duration: Duration(milliseconds: 1500),
     );
-
-    scaffoldKey.currentState.showSnackBar(snackBar);
+    if(scaffoldKey.currentState != null ){
+      scaffoldKey.currentState.showSnackBar(snackBar);
+    }
   }
 
   Widget _crearDisponible() {

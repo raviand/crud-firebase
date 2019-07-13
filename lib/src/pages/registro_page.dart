@@ -4,7 +4,7 @@ import 'package:form_validation/src/blocs/provider.dart';
 import 'package:form_validation/src/providers/usuario_provider.dart';
 import 'package:form_validation/src/utils/utils.dart' as utils;
 
-class LoginPage extends StatelessWidget {
+class RegistroPage extends StatelessWidget {
 
   final usuarioProvider = UsuarioProvider();
 
@@ -83,7 +83,7 @@ class LoginPage extends StatelessWidget {
                 height: 10.0,
                 width: double.infinity,
               ),
-              Text('Bienvenidos',
+              Text('Registro',
                   style: TextStyle(color: Colors.white, fontSize: 25.0))
             ],
           ),
@@ -119,7 +119,7 @@ class LoginPage extends StatelessWidget {
                 ]),
             child: Column(
               children: <Widget>[
-                Text('Ingresar', style: TextStyle(fontSize: 20.0)),
+                Text('Registro de nueva cuenta', style: TextStyle(fontSize: 20.0)),
                 SizedBox(
                   height: 40.0,
                 ),
@@ -136,8 +136,8 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           FlatButton(
-            child: Text('Crear una nueva cuenta'),
-            onPressed: ()=>Navigator.pushReplacementNamed(context, 'registro'),
+            child: Text('¿Ya tienes cuenta? Register'),
+            onPressed: ()=>Navigator.pushReplacementNamed(context, 'login'),
           ),
           SizedBox(
             height: 100.0,
@@ -209,24 +209,27 @@ class LoginPage extends StatelessWidget {
           elevation: 5.0,
           color: Colors.deepPurple,
           textColor: Colors.white,
-          onPressed: snapshot.hasData ? ()=>_login(bloc, context) : null,
+          onPressed: snapshot.hasData ? ()=>_register(bloc, context) : null,
         );
       },
     );
   }
 
-  _login( LoginBloc bloc, BuildContext context) async {
+  _register( LoginBloc bloc, BuildContext context) async{
+    
+    
 
-    final Map resp = await usuarioProvider.login(bloc.email, bloc.password);
+    final resp = await usuarioProvider.nuevoUsuario(bloc.email, bloc.password);
+
     if( resp['ok'] ){
       Navigator.of(context).pushReplacementNamed('home');
     }else{
       
       utils.mostarAlerta(context, resp['message']);
     }
+
+
     //Navigator.of(context).pushReplacementNamed('home');
   }
-
-  
 
 }
