@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:form_validation/src/blocs/productos_bloc.dart';
+import 'package:form_validation/src/blocs/provider.dart';
 import 'package:form_validation/src/models/producto_model.dart';
-import 'package:form_validation/src/providers/prouctos_provider.dart';
 import 'package:form_validation/src/utils/utils.dart' as utils;
 import 'package:image_picker/image_picker.dart';
 
@@ -14,7 +15,6 @@ class ProductoPage extends StatefulWidget {
 class _ProductoPageState extends State<ProductoPage> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final productoProvider = new ProductosProvider();
 
 
   ProductoModel producto = ProductoModel();
@@ -22,7 +22,7 @@ class _ProductoPageState extends State<ProductoPage> {
   File foto;
   @override
   Widget build(BuildContext context) {
-    
+  final ProductosBloc productosBloc = Provider.productosBloc(context);
     final ProductoModel prodEdit = ModalRoute.of(context).settings.arguments;
     if(prodEdit != null){
       producto = prodEdit;
@@ -53,7 +53,7 @@ class _ProductoPageState extends State<ProductoPage> {
                 _crearNombre(),
                 _crearPrecio(),
                 _crearDisponible(),
-                _crearBoton()
+                _crearBoton(productosBloc)
               ],
             ),
           ),
@@ -97,7 +97,7 @@ class _ProductoPageState extends State<ProductoPage> {
     );
   }
 
-  Widget _crearBoton() {
+  Widget _crearBoton(ProductosBloc productosBloc ) {
     return RaisedButton.icon(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0)
@@ -106,11 +106,11 @@ class _ProductoPageState extends State<ProductoPage> {
       textColor: Colors.white,
       label: Text('Guardar'),
       icon: Icon(Icons.save),
-      onPressed: (_guardando) ? null : _submit,
+      onPressed: ( _guardando ) ? null : () => _submit(productosBloc),
     );
   }
 
-  void _submit() async {
+  void _submit(ProductosBloc productosBloc )async {
 
     
     if(!formKey.currentState.validate()) return ;
@@ -120,14 +120,14 @@ class _ProductoPageState extends State<ProductoPage> {
     setState(() => _guardando = true);
 
     if( foto != null){
-      producto.fotoUrl = await productoProvider.subirImagen(foto);
+      producto.fotoUrl = await productosBloc.subirFoto(foto);
     }
 
     if(producto.id == null){
-      productoProvider.crearProducto(producto);
+      productosBloc.agregarProducto(producto);
       mostrarSnackbar('Se ha creado un nuevo registro');
     }else{
-      productoProvider.modificarProducto(producto);
+      productosBloc.editarProducto(producto);
       mostrarSnackbar('El articulo se modifico correctamnte');
     }
 

@@ -39,6 +39,8 @@ class ProductosProvider{
     
     if(decodeData == null) return [];
 
+    if(decodeData['error'] != null ) return [];
+
     decodeData.forEach((id, prod){
       
       
